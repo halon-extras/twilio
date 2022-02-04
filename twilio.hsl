@@ -1,0 +1,19 @@
+$TWILIO_ACCOUNT_SID = "...";
+$TWILIO_AUTH_TOKEN = "...";
+$MessagingServiceSid = "...";
+
+function twilio_message($to, $body)
+{
+	global $TWILIO_ACCOUNT_SID, $TWILIO_AUTH_TOKEN, $MessagingServiceSid;
+	$result = http("https://api.twilio.com/2010-04-01/Accounts/$TWILIO_ACCOUNT_SID/Messages.json", [
+			"tls_default_ca" => true,
+			"headers" => [ "Authorization: Basic ".base64_encode("$TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN") ],
+		], [], [
+			"MessagingServiceSid" => $MessagingServiceSid,
+			"To" => $to,
+			"Body" => $body,
+		]);
+	if ($result)
+		return json_decode($result);
+	return none;
+}
